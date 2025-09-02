@@ -1,0 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{ --radius: 1rem; }
+html, body { height: 100%; }
+.text-muted-foreground { color: theme('colors.muted.foreground'); }
+.bg-muted { background-color: theme('colors.muted.DEFAULT'); }
