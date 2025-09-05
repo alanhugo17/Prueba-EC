@@ -116,26 +116,60 @@ function KpiCard({ title, value, subtitle, icon: Icon }:{ title:string; value:an
 
 /** Hojas */
 function Hoja0_Resumen(){
-  const last = meses.length-1;
-  const kpis = [
-    { t:"Presentismo", v: presentismoPct[last].toFixed(0)+"%", i: TrendingUp },
-    { t:"Horas coord.", v: fmtNumber(horasCoord[last]), i: Layers },
-    { t:"Horas reales", v: fmtNumber(horasReales[last]), i: Activity },
-    { t:"Prestadores activos", v: fmtNumber(prestActivos[last]), i: Users },
-    { t:"Altas prest.", v: fmtNumber(altasPrest[last]), i: UserPlus },
-    { t:"Bajas prest.", v: fmtNumber(bajasPrest[last]), i: UserMinus },
-    { t:"Pacientes activos", v: fmtNumber(pacActivos[last]), i: Home },
-  ];
+  const last = meses.length - 1;
+
+  // KPIs
+  const kpiPresentismo = { t:"Presentismo", v: presentismoPct[last].toFixed(0)+"%", i: TrendingUp };
+  const kpiHorasCoord  = { t:"Horas coord.", v: fmtNumber(horasCoord[last]), i: Layers };
+  const kpiHorasReales = { t:"Horas reales", v: fmtNumber(horasReales[last]), i: Activity };
+  const kpiPrestAct    = { t:"Prestadores activos", v: fmtNumber(prestActivos[last]), i: Users };
+  const kpiAltasPrest  = { t:"Altas prest.", v: fmtNumber(altasPrest[last]), i: UserPlus };
+  const kpiBajasPrest  = { t:"Bajas prest.", v: fmtNumber(bajasPrest[last]), i: UserMinus };
+  const kpiPacAct      = { t:"Pacientes activos", v: fmtNumber(pacActivos[last]), i: Home };
+
+  // Mini-chart de presentismo
+  const dataPres = meses.map((m,i)=> ({ mes: m.label, Presentismo: presentismoPct[i] }));
 
   return (
     <div className="space-y-4">
       <Toolbar />
-      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-        {kpis.map((k)=> <KpiCard key={k.t} title={k.t} value={k.v} icon={k.i} />)}
+
+      {/* Grilla en 12 columnas para distribuir mejor */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+
+        {/* Fila 1: 4 KPIs (3 columnas cada uno = 12) */}
+        <div className="md:col-span-3"><KpiCard title={kpiPresentismo.t} value={kpiPresentismo.v} icon={kpiPresentismo.i} /></div>
+        <div className="md:col-span-3"><KpiCard title={kpiHorasCoord.t}  value={kpiHorasCoord.v}   icon={kpiHorasCoord.i}  /></div>
+        <div className="md:col-span-3"><KpiCard title={kpiHorasReales.t} value={kpiHorasReales.v}  icon={kpiHorasReales.i} /></div>
+        <div className="md:col-span-3"><KpiCard title={kpiPrestAct.t}    value={kpiPrestAct.v}     icon={kpiPrestAct.i}    /></div>
+
+        {/* Fila 2: 3 KPIs + mini gráfico (cada Kpi 3 col, gráfico 3 col) */}
+        <div className="md:col-span-3"><KpiCard title={kpiAltasPrest.t}  value={kpiAltasPrest.v}   icon={kpiAltasPrest.i}  /></div>
+        <div className="md:col-span-3"><KpiCard title={kpiBajasPrest.t}  value={kpiBajasPrest.v}   icon={kpiBajasPrest.i}  /></div>
+        <div className="md:col-span-3"><KpiCard title={kpiPacAct.t}      value={kpiPacAct.v}       icon={kpiPacAct.i}      /></div>
+
+        {/* Mini gráfico: Presentismo 12 meses */}
+        <div className="md:col-span-3">
+          <Card className="rounded-2xl">
+            <CardHeader><CardTitle>Presentismo 12 meses</CardTitle></CardHeader>
+            <CardContent className="h-[140px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={dataPres}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="mes" hide />
+                  <YAxis domain={[70, 110]} hide />
+                  <Tooltip formatter={(v)=> `${v}%`} />
+                  <Line type="monotone" dataKey="Presentismo" stroke={THEME.series.d} dot={false} />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
 }
+
 
 function Hoja1_Presentismo(){
   const dataLinea = meses.map((m,i)=> ({ mes:m.label, "Horas coordinadas": horasCoord[i], "Horas reales": horasReales[i], "Presentismo%": presentismoPct[i] }));
