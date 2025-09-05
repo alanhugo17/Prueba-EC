@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -550,6 +551,19 @@ export default function Page(){
         <div className="max-w-[1400px] mx-auto px-4 py-3 flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg border" style={{ backgroundColor: THEME.secondary, borderColor: THEME.primary }} />
           <div className="text-lg font-semibold tracking-tight">EnCasa – Mock UI Operativo</div>
+          <div className="ml-auto flex items-center gap-2">
+  <Link href="/" className="inline-flex h-9 items-center rounded-2xl bg-primary px-3 text-sm text-primary-foreground hover:opacity-90">
+    Operativo
+  </Link>
+  <Link href="/rentabilidad" className="inline-flex h-9 items-center rounded-2xl border border-gray-300 bg-white px-3 text-sm hover:bg-muted">
+    Gestión + Rentabilidad
+  </Link>
+  <div className="hidden sm:flex items-center gap-2">
+    <div className="inline-flex items-center rounded-full border border-gray-300 px-2 py-1 text-xs">Mock</div>
+    <div className="inline-flex items-center rounded-full bg-[#EBE8E3] px-2 py-1 text-xs text-gray-700">Solo estética</div>
+  </div>
+</div>
+
           <div className="ml-auto flex items-center gap-2">
             <Badge variant="outline" className="rounded-full">Mock</Badge>
             <Badge variant="secondary" className="rounded-full">Solo estética</Badge>
